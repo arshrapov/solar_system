@@ -2,8 +2,9 @@ def main():
     import ris
     import objects_ as objc
 
-    planets = [objc.Planet("Земля",
-                           5.97e24, 30000, [400, 400], objc.satellite("Луна", 7.35e22, 5000, 70000)) ]
+    planets = [objc.Planet("Земля", 5.97e24, 30000, [400, 400],
+                           objc.satellite("Луна", 7.35e22, 5000, 70000, 400))]
+
     ris.draw(planets)
 
 

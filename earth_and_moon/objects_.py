@@ -22,44 +22,47 @@ class Planet:
         self.r = (r / 1000)
         self.coords = coords
         self.satellites = list(satellites)
-        self.normalAcceleration()
+        self.initStCoords(self.coords)
 
-    def normalAcceleration(self):
+    def initStCoords(self, coords):
         for st in self.satellites:
-            st.acceleration = 0.3
-            print(st.R)
-            st.coords = [self.coords[0] - st.R, self.coords[1]]
-            print(st.coords, self.coords)
-            st.deltaCoords()
+            st.initStartCoords(coords, self.r)
+
 
 
 class satellite:
 
-    def __init__(self,name, m, r, R):
+    def __init__(self,name, m, r, R, T):
         """
         :param name: название спутника
         :param m: масса спутника, в кг
         :param r: радиус спутника
         :param R: расстояние до планеты-сородича
+        :param T: период обращения вокруг планеты, в земных днях
         """
+
+        from math import pi
+
         self.name = name
         self.m = m
         self.r = r / 1000
         self.R = R / 1000
-        self.acceleration = None
+        self.T = T
+        self.acceleration = T / 360
         self.coords = []
         self.u = 0
         self.w = 0
+        self.v = 2 * pi * self.R / 180
         self.oval = None
 
+    def initStartCoords(self, coords, r):
+        self.coords = [coords[0] - self.R - self.r /2, coords[1] - self.r /2]
+        self.R += r
     def getCoords(self):
         from model import getDelta
-        self.coords =  getDelta(self.coords, self.R, self.u)
+        self.coords = getDelta(self.coords, self.v, self.u)
         self.u += self.acceleration
         return self.coords
-
-    def deltaCoords(self):
-        self.coords = [self.coords[0], self.coords[1]]
 
 
 if __name__ == "__main__":

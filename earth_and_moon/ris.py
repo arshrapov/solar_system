@@ -16,7 +16,6 @@ def draw(planets):
             for st in planet.satellites:
                 st_coords = st.getCoords()
                 st_oval_coords = getOvalCoords(st_coords[0], st_coords[1], st.r)
-
                 st.oval = c.create_oval(st_oval_coords[0], st_oval_coords[1], st_oval_coords[2], st_oval_coords[3])
 
 
@@ -25,10 +24,12 @@ def draw(planets):
             for st in planet.satellites:
                 st_coords = st.getCoords()
                 c.moveto(st.oval, st_coords[0], st_coords[1])
+
         root.after(10, movement)
 
 
     dr()
+    movement()
     root.mainloop()
 
 
