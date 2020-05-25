@@ -73,7 +73,7 @@ class Planet:
 
 class satellite:
 
-    def __init__(self,name, m, r, R, T, color="gray"):
+    def __init__(self,name, m, r, R, color="gray"):
         """
         :param name: название спутника
         :param m: масса спутника, в кг
@@ -87,7 +87,6 @@ class satellite:
         self.m = m
         self.r = r / 500
         self.R = R / 500
-        self.acceleration = T / 360
         self.start_coords = []
         self.oval = None
         self.v = None
