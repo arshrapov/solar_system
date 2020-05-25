@@ -2,12 +2,10 @@ from tkinter import *
 from model import getOvalCoords
 
 
-
 def draw(planets):
     root = Tk()
     c = Canvas(root, width=1000, height=1000, bg='white')
     c.pack()
-
 
     def dr():
         for planet in planets:
@@ -17,7 +15,6 @@ def draw(planets):
                 st_coords = st.getCoords()
                 st_oval_coords = getOvalCoords(st_coords[0], st_coords[1], st.r)
                 st.oval = c.create_oval(st_oval_coords[0], st_oval_coords[1], st_oval_coords[2], st_oval_coords[3])
-
 
     def movement():
         for planet in planets:

@@ -1,13 +1,8 @@
-def getDelta(start_cords, v, u):
-    """
-    :param a: нормальное ускорение
-    :param start_cords: начальное положения тела в пространстве
-    :param v: линейная скорость тела
-    :return: выдаёт координаты движения
-    """
-    from math import sin, cos, pi
-
-    return start_cords[0] + v * sin(pi * u / 90), start_cords[1] + v * cos(pi * u / 90)
+def func(x, R):
+    y = (x*x - R*R) ** 0.5
+    if type(y) == type(1j):
+        return 0
+    return y
 
 
 def getOvalCoords(x, y, r):

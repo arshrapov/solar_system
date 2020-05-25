@@ -1,15 +1,57 @@
-def acceleration(satellite, m):
+def speedX(satellite, m, R):
     """
     :param satellite: объект типа спутника
     :param m: масса планеты, по орбите которой вращается спутник
-    :return: центростриметельное ускорение по орбите планеты
+    :return: скорость планеты по оси X
     """
-    pass
+    G = 6.67 * 10e-11
+    F = G * satellite.m * m / (R ** 2)
+    a = F / m
+    return (a * R) ** 0.5 / 1000000
+
+
+class Coords:
+    """
+    :param R: Радиус орбиты
+    :param v: скорости по оси x
+    :param start_cords: положения тела в пространстве Tkinter
+    """
+    def __init__(self, R, v, start_cords):
+        """
+        :param R: Радиус орбиты
+        :param v: скорости по оси x
+        :param start_cords: положения тела в пространстве Tkinter
+        """
+        self.x = -R
+        self.y = 0
+        self.R = R
+        self.v = v
+        self.direction = 1
+        self.start_cords = start_cords
+        self.finshed = False
+
+    def getNextCoords(self):
+        from model import func
+
+        if self.x >= self.R:
+            self.direction = -1
+            self.finshed = 1
+        if self.x <= -self.R and self.finshed:
+            self.direction = 1
+            self.finshed = 0
+
+        print(self.direction * func(self.x, self.R))
+        print(self.y, "==", end ='')
+        self.y = self.direction * func(self.x, self.R)
+        print(self.y)
+        coords = [self.x, self.y]
+        self.x += self.direction * self.v
+        return list(map(lambda a, b: a + b, [self.x, self.y], self.start_cords))
 
 
 class Planet:
 
-    def __init__(self, name, m, r, coords, *satellites):
+    def __init__(self, name, m, r, coords, *satellites, color="black"):
         """
         :param name: Название планеты
         :param m:  массы планеты в кг
@@ -19,20 +61,19 @@ class Planet:
         """
         self.name = name
         self.m = m
-        self.r = (r / 1000)
+        self.r = (r / 500)
         self.coords = coords
         self.satellites = list(satellites)
         self.initStCoords(self.coords)
 
     def initStCoords(self, coords):
         for st in self.satellites:
-            st.initStartCoords(coords, self.r)
-
+            st.initStartParams(coords, self.r, self.m)
 
 
 class satellite:
 
-    def __init__(self,name, m, r, R, T):
+    def __init__(self,name, m, r, R, T, color="gray"):
         """
         :param name: название спутника
         :param m: масса спутника, в кг
@@ -45,25 +86,22 @@ class satellite:
 
         self.name = name
         self.m = m
-        self.r = r / 1000
-        self.R = R / 1000
+        self.r = r / 500
+        self.R = R / 500
         self.T = T
         self.acceleration = T / 360
-        self.coords = []
-        self.u = 0
-        self.w = 0
-        self.v = 2 * pi * self.R / 180
+        self.start_coords = []
         self.oval = None
+        self.v = None
+        self.coords = None
 
-    def initStartCoords(self, coords, r):
-        self.coords = [coords[0] - self.R - self.r /2, coords[1] - self.r /2]
-        self.R += r
+    def initStartParams(self, coords, r, M):
+        self.start_coords = [coords[0], coords[1]]
+        self.v = speedX(self, M, self.R)
+        self.coords = Coords(self.R, self.v, self.start_coords)
+
     def getCoords(self):
-        from model import getDelta
-        self.coords = getDelta(self.coords, self.v, self.u)
-        self.u += self.acceleration
-        return self.coords
-
+        return self.coords.getNextCoords()
 
 if __name__ == "__main__":
     print('Файл Objects был запущен')
