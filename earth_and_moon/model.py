@@ -1,5 +1,5 @@
 def func(x, R):
-    y = (x*x - R*R) ** 0.5
+    y = (abs(x*x - R*R)) ** 0.5
     if type(y) == type(1j):
         return 0
     return y

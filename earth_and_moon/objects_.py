@@ -79,7 +79,6 @@ class satellite:
         :param m: масса спутника, в кг
         :param r: радиус спутника
         :param R: расстояние до планеты-сородича
-        :param T: период обращения вокруг планеты, в земных днях
         """
 
         from math import pi
@@ -88,7 +87,6 @@ class satellite:
         self.m = m
         self.r = r / 500
         self.R = R / 500
-        self.T = T
         self.acceleration = T / 360
         self.start_coords = []
         self.oval = None
@@ -102,6 +100,7 @@ class satellite:
 
     def getCoords(self):
         return self.coords.getNextCoords()
+
 
 if __name__ == "__main__":
     print('Файл Objects был запущен')
