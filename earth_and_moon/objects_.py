@@ -56,13 +56,14 @@ class Coords:
 
     def updateSpeed(self, speed):
         """
-         updateSpeed(speed) изменяем текущую скорость по оси OX на speed
+        updateSpeed(speed) изменяем текущую скорость по оси OX на speed
         :param speed: новая скорость
         """
         self.v = speed
 
     def getDistanceFromPlanet (self):
         return (self.x ** 2 + self.y ** 2) ** 0.5
+
 
 class Planet:
 
@@ -74,6 +75,7 @@ class Planet:
         :param satellites: её спутники, объекты типа satellite
         :param coords: координаты планеты
         """
+
         self.name = name
         self.weight = weight
         self.radius = (radius / 500)
@@ -91,7 +93,7 @@ class Planet:
 
 class Satellite:
 
-    def __init__(self,name, weight, radius, R1, R2, color="gray"):
+    def __init__(self, name, weight, radius, R1, R2, color="gray"):
         """
         :param name: название спутника
         :param m: масса спутника, в кг
@@ -122,7 +124,7 @@ class Satellite:
         self.v = speedX(self, M, self.distance)
         self.coords = Coords(self.R1, self.R2, self.v, self.start_coords)
 
-    def getCoords(self) -> list:
+    def getCoords(self) -> list():
         """
         :return: массив значений где первый элемент новая координата по оси OX, второй элемент новая координата по оси OY
         """
@@ -134,6 +136,6 @@ class Satellite:
 
 if __name__ == "__main__":
     print('Файл Objects был запущен')
-
+    pl = Planet()
 else:
     print("Файл Objects был заимпортирован")

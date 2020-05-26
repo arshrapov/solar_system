@@ -8,8 +8,6 @@ def getCoordY(x, R1, R2) -> float:
     :return: y - координата по оси OY
     """
     y = (R2 * R2 * abs(1 - x * x / (R1 * R1))) ** 0.5
-    if type(y) == type(1j):
-        return 0
     return y
 
 
