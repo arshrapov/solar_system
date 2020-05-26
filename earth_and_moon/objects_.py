@@ -1,16 +1,17 @@
 from model import getCoordY
 
 
-def speedX(Satellite, weight: float, R: float) -> float:
+def speedX(Satellite, weight: float, distance: float) -> float:
     """
     :param Satellite: объект типа спутника
-    :param m: масса планеты, по орбите которой вращается спутник
+    :param weight: масса планеты, по орбите которой вращается спутник
+    :param distance: расстояние до планеты в данный момент
     :return: скорость планеты по оси X
     """
     G = 6.67 * 10e-11
-    F = G * Satellite.weight * weight / (R ** 2)
+    F = G * Satellite.weight * weight / (distance ** 2)
     a = F / weight
-    v = (a * R) ** 0.5 / 100000000
+    v = (a * distance) ** 0.5 / 80000000
     return v
 
 
@@ -53,6 +54,15 @@ class Coords:
         self.x += self.direction * self.v
         return list(map(lambda a, b: a + b, [self.x, self.y], self.start_cords))
 
+    def updateSpeed(self, speed):
+        """
+         updateSpeed(speed) изменяем текущую скорость по оси OX на speed
+        :param speed: новая скорость
+        """
+        self.v = speed
+
+    def getDistanceFromPlanet (self):
+        return (self.x ** 2 + self.y ** 2) ** 0.5
 
 class Planet:
 
@@ -94,6 +104,7 @@ class Satellite:
         self.radius = radius / 500
         self.R1 = R1 / 500
         self.R2 = R2 / 500
+        self.distance = R1
         self.start_coords = []
         self.oval = None
         self.v = None
@@ -108,13 +119,16 @@ class Satellite:
         self.R1 += r
         self.R2 += r
         self.start_coords = [coords[0], coords[1]]
-        self.v = speedX(self, M, self.R1)
+        self.v = speedX(self, M, self.distance)
         self.coords = Coords(self.R1, self.R2, self.v, self.start_coords)
 
     def getCoords(self) -> list:
         """
         :return: массив значений где первый элемент новая координата по оси OX, второй элемент новая координата по оси OY
         """
+        self.distance = self.coords.getDistanceFromPlanet()
+        self.v = speedX(self, self.weight, self.distance)
+        self.coords.updateSpeed(self.v)
         return self.coords.getNextCoords()
 
 

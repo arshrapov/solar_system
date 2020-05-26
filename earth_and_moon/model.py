@@ -1,4 +1,4 @@
-def getCoordY(x, R1, R2):
+def getCoordY(x, R1, R2) -> float:
     """
     func(x, R1, R2)
     возвращает y исходя из x, R1, R2 (x^2/a^2 + y^2/b^2 = 1)

@@ -11,6 +11,5 @@ def main():
     ris.draw(planets, 660, 660, 1)
 
 
-
 if __name__ == "__main__":
     main()
