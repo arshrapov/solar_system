@@ -11,7 +11,7 @@ def speedX(Satellite, weight: float, distance: float) -> float:
     G = 6.67 * 10e-11
     F = G * Satellite.weight * weight / (distance ** 2)
     a = F / weight
-    v = (a * distance) ** 0.5 / 80000000
+    v = (a * distance) ** 0.5 / 10000000
     return v
 
 
