@@ -1,103 +1,120 @@
-def speedX(satellite, m, R):
+from model import getCoordY
+
+
+def speedX(Satellite, weight: float, R: float) -> float:
     """
-    :param satellite: объект типа спутника
+    :param Satellite: объект типа спутника
     :param m: масса планеты, по орбите которой вращается спутник
     :return: скорость планеты по оси X
     """
     G = 6.67 * 10e-11
-    F = G * satellite.m * m / (R ** 2)
-    a = F / m
-    return (a * R) ** 0.5 / 1000000
+    F = G * Satellite.weight * weight / (R ** 2)
+    a = F / weight
+    v = (a * R) ** 0.5 / 100000000
+    return v
 
 
 class Coords:
     """
-    :param R: Радиус орбиты
+    :param R1: Радиус орбиты по OX
+    :param R2: Радиус орбиты по OY
     :param v: скорости по оси x
     :param start_cords: положения тела в пространстве Tkinter
     """
-    def __init__(self, R, v, start_cords):
+    def __init__(self, R1, R2, v, start_cords):
         """
-        :param R: Радиус орбиты
+        :param R1: Радиус орбиты по OX
+        :param R2: Радиус орбиты по OY
         :param v: скорости по оси x
         :param start_cords: положения тела в пространстве Tkinter
         """
-        self.x = -R
+        self.x = -R1
         self.y = 0
-        self.R = R
+        self.R1 = R1
+        self.R2 = R2
         self.v = v
         self.direction = 1
         self.start_cords = start_cords
-        self.finshed = False
+        self.finished = False
 
-    def getNextCoords(self):
-        from model import func
-
-        if self.x >= self.R:
+    def getNextCoords(self) -> list():
+        """
+        С учётом перемещения тела выдаёт следующее положения тела в пространстве относительно родителя(планеты или здвезды)
+        :return: массив значений, где первый элемент - положения тела по оси OX, а второй элемент - положения тела по оси OY
+        """
+        if self.x >= self.R1:
             self.direction = -1
-            self.finshed = 1
-        if self.x <= -self.R and self.finshed:
+            self.finished = 1
+        if self.x <= -self.R1 and self.finished:
             self.direction = 1
-            self.finshed = 0
+            self.finished = 0
 
-        print(self.direction * func(self.x, self.R))
-        print(self.y, "==", end ='')
-        self.y = self.direction * func(self.x, self.R)
-        print(self.y)
-        coords = [self.x, self.y]
+        self.y = self.direction * getCoordY(self.x, self.R1, self.R2)
         self.x += self.direction * self.v
         return list(map(lambda a, b: a + b, [self.x, self.y], self.start_cords))
 
 
 class Planet:
 
-    def __init__(self, name, m, r, coords, *satellites, color="black"):
+    def __init__(self, name: str, weight: float, radius: float, coords: list(), *satellites: list, color="black"):
         """
         :param name: Название планеты
         :param m:  массы планеты в кг
-        :param r: радиус планеты
+        :param radius: радиус планеты
         :param satellites: её спутники, объекты типа satellite
         :param coords: координаты планеты
         """
         self.name = name
-        self.m = m
-        self.r = (r / 500)
+        self.weight = weight
+        self.radius = (radius / 500)
         self.coords = coords
         self.satellites = list(satellites)
-        self.initStCoords(self.coords)
+        self.initStartSattelCoords()
 
-    def initStCoords(self, coords):
+    def initStartSattelCoords(self):
+        """
+        Инициализируем положения спутников нашей планеты
+        """
         for st in self.satellites:
-            st.initStartParams(coords, self.r, self.m)
+            st.initStartParams(self.coords, self.radius, self.weight)
 
 
-class satellite:
+class Satellite:
 
-    def __init__(self,name, m, r, R, color="gray"):
+    def __init__(self,name, weight, radius, R1, R2, color="gray"):
         """
         :param name: название спутника
         :param m: масса спутника, в кг
-        :param r: радиус спутника
+        :param radius: радиус спутника
         :param R: расстояние до планеты-сородича
         """
 
-        from math import pi
-
         self.name = name
-        self.m = m
-        self.r = r / 500
-        self.R = R / 500
+        self.weight = weight
+        self.radius = radius / 500
+        self.R1 = R1 / 500
+        self.R2 = R2 / 500
         self.start_coords = []
         self.oval = None
         self.v = None
         self.coords = None
 
     def initStartParams(self, coords, r, M):
+        """
+        :param coords: координаты планеты, понадобятся для вычислений
+        :param r: радиус планеты, понадобятся для вычислений
+        :param M: масса планеты, понадобятся для вычислений
+        """
+        self.R1 += r
+        self.R2 += r
         self.start_coords = [coords[0], coords[1]]
-        self.v = speedX(self, M, self.R)
-        self.coords = Coords(self.R, self.v, self.start_coords)
+        self.v = speedX(self, M, self.R1)
+        self.coords = Coords(self.R1, self.R2, self.v, self.start_coords)
 
-    def getCoords(self):
+    def getCoords(self) -> list:
+        """
+        :return: массив значений где первый элемент новая координата по оси OX, второй элемент новая координата по оси OY
+        """
         return self.coords.getNextCoords()
 
 

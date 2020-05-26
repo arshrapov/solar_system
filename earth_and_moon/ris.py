@@ -2,30 +2,43 @@ from tkinter import *
 from model import getOvalCoords
 
 
-def draw(planets):
+def draw(planets, w, h, ts):
+    """
+    :param planets: список планет, которые являются объектами типа  Planet
+    :param w: целое число, используются для обозначения ширины окна
+    :param h: целое число, используются для обозначения высоты окна
+    :param ts: время, в мс, частота кадров
+    :return:
+    """
     root = Tk()
-    c = Canvas(root, width=1000, height=1000, bg='white')
-    c.pack()
+    cnv = Canvas(root, width=w, height=h, bg='white')
+    cnv.pack()
 
-    def dr():
+    def drawStartPosition():
+        """
+        Рисуем первое состояние нашей системы
+        """
         for planet in planets:
-            coords = getOvalCoords(planet.coords[0], planet.coords[1], planet.r)
-            c.create_oval(coords[0], coords[1], coords[2], coords[3])
-            for st in planet.satellites:
-                st_coords = st.getCoords()
-                st_oval_coords = getOvalCoords(st_coords[0], st_coords[1], st.r)
-                st.oval = c.create_oval(st_oval_coords[0], st_oval_coords[1], st_oval_coords[2], st_oval_coords[3])
+            coords = getOvalCoords(planet.coords[0], planet.coords[1], planet.radius)
+            cnv.create_oval(coords[0], coords[1], coords[2], coords[3])
+            for satellite in planet.satellites:
+                st_coords = satellite.getCoords()
+                st_oval_coords = getOvalCoords(st_coords[0], st_coords[1], satellite.radius)
+                satellite.oval = cnv.create_oval(st_oval_coords[0], st_oval_coords[1], st_oval_coords[2],
+                                                 st_oval_coords[3])
 
     def movement():
+        """
+        Последовательно рисуем каждое последующее состояние нашей системы, где задержка между кадрами - ts
+        """
         for planet in planets:
-            for st in planet.satellites:
-                st_coords = st.getCoords()
-                c.moveto(st.oval, st_coords[0], st_coords[1])
+            for satellite in planet.satellites:
+                st_coords = satellite.getCoords()
+                cnv.moveto(satellite.oval, st_coords[0], st_coords[1])
 
-        root.after(10, movement)
+        root.after(ts, movement)
 
-
-    dr()
+    drawStartPosition()
     movement()
     root.mainloop()
 

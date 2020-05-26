@@ -1,0 +1,20 @@
+{
+  "Width" : 660,
+  "Height" : 660,
+  "Ts" : 1,
+  "Planets":
+  {
+    "Planet1" : {
+      "name": "Planet1",
+      "weight" : 26000000000000,
+      "radius" : 50000,
+      "start_coords" : [200, 2000],
+      "satellites" : [
+
+      ]
+     },
+    "Planet2" : {
+      "name" : "Planet2",
+    }
+  }
+}
