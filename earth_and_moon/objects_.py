@@ -67,7 +67,7 @@ class Coords:
 
 class Planet:
 
-    def __init__(self, name: str, weight: float, radius: float, coords: list(), *satellites: list, color="black"):
+    def __init__(self, name: str, weight: float, radius: float, R1, R2, *satellites: list, color="black"):
         """
         :param name: Название планеты
         :param m:  массы планеты в кг
@@ -79,9 +79,17 @@ class Planet:
         self.name = name
         self.weight = weight
         self.radius = (radius / 500)
-        self.coords = coords
+        self.start_coords = []
         self.satellites = list(satellites)
-        self.initStartSattelCoords()
+        self.initStartSattelCoords()o
+        self.R1 = R1
+        self.R2 = R2
+
+    def initStartParams(self):
+        """
+        Инициализация начальных параметров Спутника
+        """
+        pass
 
     def initStartSattelCoords(self):
         """
@@ -132,6 +140,21 @@ class Satellite:
         self.v = speedX(self, self.weight, self.distance)
         self.coords.updateSpeed(self.v)
         return self.coords.getNextCoords()
+
+
+class Star:
+    def __init__(self, name: str, weight: float, radius: float, start_coords: list(), *planets, color="yellow"):
+        self.name = name
+        self.weight = weight
+        self.radius = radius
+        self.start_coords = start_coords
+        self.planets = planets
+        self.color = color
+        self.initStartPlanetParams()
+
+    def initStartPlanetParams(self):
+        for planet in self.planets:
+            planet.initStartParams()
 
 
 if __name__ == "__main__":
