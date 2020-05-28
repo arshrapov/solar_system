@@ -2,9 +2,14 @@ def main():
     import ris
     import objects_ as objc
 
-    stars = {objc.Star("Звезда", 8.87e45, 150000, [740, 340], objc.Planet("Планета", 5.97e25, 25000, 300000, 500000,
-                           objc.Satellite("Спутник1", 7.35e22, 5000, 100000, 75000),
-                           objc.Satellite("Спутник2", 7.35e21, 3500, 100000, 99000)))}
+    stars = [objc.Star("Солнце", 1.9891e30, 6.9e6, [890, 500],
+                       objc.Planet("Меркурий", 3.3e23, 2435, 58e6, 70e6),
+                       objc.Planet("Венера", 4.87e24, 6050, 108e6, 130e6),
+                       objc.Planet("Земля", 5.97e24, 6377, 149e6, 138e6,
+                                   objc.Satellite("", 7.35e22, 1737, 363104, 406696)),
+                       objc.Planet("Марс", 6.42e23, 3396, 228e6, 230e6),
+                       objc.Planet("", 1.896e28, 69e3, 778e6, 811e6)
+                       )]
 
     ris.draw(stars, 1980, 1000, 1)
 

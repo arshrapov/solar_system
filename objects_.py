@@ -11,7 +11,7 @@ def speedX(Object, weight: float, distance: float) -> float:
     G = 6.67 * 10e-11
     F = G * Object.weight * weight / (distance ** 2)
     a = F / weight
-    v = (a * distance) ** 0.5 / 100000000
+    v = (a * distance) ** 0.5 / 70000000
     return v
 
 
@@ -64,23 +64,34 @@ class Coords:
 
 
 class Planet:
+    """
+    :param name: Название планеты
+    :param m:  массы планеты в кг
+    :param radius: радиус планеты
+    :param R1: радиус1 эллипса вокруг которого движется планета
+    :param R2: радиус2 эллипса вокруг которого движется планета
+    :param satellites: её спутники, объекты типа satellite
+    :param coords: координаты планеты
+    """
 
-    def __init__(self, name: str, weight: float, radius: float, R1, R2, *satellites: list, color="black"):
+    def __init__(self, name: str, weight: float, radius: float, R1, R2, *satellites: list, color="black", scale=200000):
         """
         :param name: Название планеты
         :param m:  массы планеты в кг
         :param radius: радиус планеты
+        :param R1: радиус1 эллипса вокруг которого движется планета
+        :param R2: радиус2 эллипса вокруг которого движется планета
         :param satellites: её спутники, объекты типа satellite
         :param coords: координаты планеты
         """
 
         self.name = name
         self.weight = weight
-        self.radius = radius / 1000
+        self.radius = radius / scale
         self.start_coords = []
         self.satellites = list(satellites)
-        self.R1 = R1 / 1000
-        self.R2 = R2 / 1000
+        self.R1 = R1 / scale
+        self.R2 = R2 / scale
         self.coords = None
         self.oval = None
         self.distance = R1
@@ -91,9 +102,10 @@ class Planet:
         """
         Инициализация начальных параметров Спутника
         """
+        self.R1 += radius
+        self.R2 += radius
         self.star_weight = weight
         self.start_coords = start_coords
-        print(start_coords)
         self.speed = speedX(self, weight, self.distance)
         self.coords = Coords(self.R1, self.R2, self.speed, self.start_coords)
         self.initStartSattelCoords()
@@ -118,20 +130,30 @@ class Planet:
         return list(map(lambda a, b: a + b, self.start_coords, coords))
 
 class Satellite:
+    """
+    :param name: название спутника
+    :param m: масса спутника, в кг
+    :param radius: радиус спутника
+    :param R: расстояние до планеты-сородича
+    :param R1: радиус1 движения по эллипсу
+    :param R2: радиус2 движения по эллипсу
+    """
 
-    def __init__(self, name, weight, radius, R1, R2, color="gray"):
+    def __init__(self, name: str, weight: object, radius: object, R1: object, R2: object, color: object = "gray", scale=200000) -> object:
         """
         :param name: название спутника
         :param m: масса спутника, в кг
         :param radius: радиус спутника
         :param R: расстояние до планеты-сородича
+        :param R1: радиус1 движения по эллипсу
+        :param R2: радиус2 движения по эллипсу
         """
 
         self.name = name
         self.weight = weight
-        self.radius = radius / 1000
-        self.R1 = R1 / 1000
-        self.R2 = R2 / 1000
+        self.radius = radius / scale
+        self.R1 = R1 / scale
+        self.R2 = R2 / scale
         self.earthDistance = R1
         self.starDistance = None
         self.start_coords = []
@@ -150,8 +172,10 @@ class Satellite:
         :param R1: радиус планеты относительно звезды
         :param R2: радиус планеты относительно звезды
         """
+        self.R1 += r
+        self.R2 += r
         self.start_coords = coords[0], coords[1]
-        self.planetSpeed = speedX(self, planetWeight, self.earthDistance) * 100
+        self.planetSpeed = speedX(self, planetWeight, self.earthDistance) * 400
         self.planetDeltaCoords = Coords(self.R1, self.R2, self.planetSpeed, self.start_coords)
         self.starDeltaCoords = PlanetCoords
 
@@ -169,10 +193,26 @@ class Satellite:
 
 
 class Star:
-    def __init__(self, name: str, weight: float, radius: float, start_coords: list(), *planets, color="yellow"):
+    """
+    :param name: название звезды
+    :param weight: масса звезды
+    :param radius: радиус звезды
+    :param start_coords: начальное положения звезды в области Tkinter
+    :param planets: планеты которые вращаются вокруг звезды
+    """
+
+    def __init__(self, name: str, weight: float, radius: float, start_coords: list(), *planets, color="yellow", scale=200000):
+        """
+        :param name: название звезды
+        :param weight: масса звезды
+        :param radius: радиус звезды
+        :param start_coords: начальное положения звезды в области Tkinter
+        :param planets: планеты которые вращаются вокруг звезды
+        """
+
         self.name = name
         self.weight = weight
-        self.radius = radius / 1000
+        self.radius = radius / scale
         self.start_coords = start_coords
         self.planets = planets
         self.color = color
